@@ -36,6 +36,7 @@ foreach ($item in $list.Items) {
             Disconnect-PnPOnline
             $templateFilePath = $templateFilePath + "\$templateName"
             Connect-PnPOnline -Url $substring -CurrentCredentials
+            Get-PnPNavigationNode -Location QuickLaunch | Remove-PnPNavigationNode -Force
             $null = Apply-PnPProvisioningTemplate -Path $templateFilePath
             Remove-Item -Path $templateFilePath -Force
             Disconnect-PnPOnline

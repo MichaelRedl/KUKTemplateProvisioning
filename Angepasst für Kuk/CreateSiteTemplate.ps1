@@ -51,7 +51,7 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
 
 
     Connect-PnPOnline -Url $siteUrl -CurrentCredentials
-    Get-PnPProvisioningTemplate -Out $savePath  -Handlers Lists, Pages, Theme, SiteSettings, PageContents
+    Get-PnPProvisioningTemplate -Out $savePath # -Handlers Lists, Pages, Theme, SiteSettings, PageContents
 
     $fileUrl = $docLibUrl + "/" + $templateName + ".pnp"
     $fileUrl = $docLibUrl + "/" + $templateName + ".pnp"
