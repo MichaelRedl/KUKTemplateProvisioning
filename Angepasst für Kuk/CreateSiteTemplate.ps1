@@ -58,7 +58,7 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
 
     # Upload the template to SharePoint
     Connect-PnPOnline -Url $adminSiteUrl -CurrentCredentials
-    Add-PnPFile -Path $savePath -Folder "/Templates" -NewFileName ($templateName + ".pnp")
+    Add-PnPFile -Path $savePath -Folder "/Templates" -NewFileName ($templateName + ".pnp") -Values @{"Title" =$templateName}
 
     # Clean up: Delete the local file
     Remove-Item -Path $savePath -Force

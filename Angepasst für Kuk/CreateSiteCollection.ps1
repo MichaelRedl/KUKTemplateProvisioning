@@ -18,7 +18,15 @@ foreach ($item in $list.Items) {
     $newUrlSiteName = $item["UrlSiteName"]
     $newSiteUrl = $sharePointUrl + $newUrlSiteName
     $newSiteAdmin = $item["SiteAdmin"]
-    $templateName = $item["Template"]
+    $templateName = $item["Select_x0020_Template"]
+   
+    $index = $templateName.IndexOf("#")
+    if ($index -ne -1) {
+        # Remove everything before and including '#'
+        $templateName = $templateName.Substring($index + 1) + ".pnp"
+    } else {
+    }
+
 
     $siteExists = Get-SPSite -Identity $newSiteUrl -ErrorAction SilentlyContinue
 
@@ -49,6 +57,11 @@ foreach ($item in $list.Items) {
             Connect-PnPOnline -Url $newSiteUrl -CurrentCredentials
             $null = Apply-PnPProvisioningTemplate -Path $templateFilePath
             Remove-Item -Path $templateFilePath -Force
+           
+
+            # Add LinkDML and LinkDMS to Abteilungslinks of newly created site. 
+             $null = Add-PnPListItem -List "Abteilungslinks"-Values @{"URL" = $linkDmlUrl; "Title" = "DML"}
+             $null = Add-PnPListItem -List "Abteilungslinks"-Values @{"URL" = $linkDmsUrl; "Title" = "DMS"}
 
             Write-Host "Site collection created and template applied at $newSiteUrl" -ForegroundColor Green
         } catch {
