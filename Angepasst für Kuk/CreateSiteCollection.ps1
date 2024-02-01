@@ -32,15 +32,18 @@ foreach ($item in $list.Items) {
 
     if ($null -eq $siteExists -and $newSiteTitle -ne "Template") {
         try {
+
             # Create the new site collection using a default template
-            $newSite = New-SPSite -Url $newSiteUrl -OwnerAlias $newSiteAdmin -Name $newSiteTitle -Template "STS#3" -ErrorAction Stop
+            $newSite = New-SPSite -Url $newSiteUrl -OwnerAlias $newSiteAdmin -Name $newSiteTitle -Template "SITEPAGEPUBLISHING#0" -ErrorAction Stop
 
             # Connect to the admin site collection
             Connect-PnPOnline -Url $siteUrl -CurrentCredentials
 
             # Download the template
+            $templateFilePath = $PSScriptRoot
             Get-PnPFile -Url "$templateLibraryUrl/$templateName" -Path $templateFilePath -AsFile
-            $templateFilePath = $templateFilePath + "\$templateName"
+            $templateFilePath = $PSScriptRoot + "\$templateName"
+           #Write-Host "TemplateFilePath $templateFilePath" -ForegroundColor Red
 
             # Create Link DML and Link DMS
             $itemId = $item["ID"] | Out-String

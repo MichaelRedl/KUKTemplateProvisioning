@@ -15,7 +15,14 @@ $list = $web.Lists[$listName]
 
 foreach ($item in $list.Items) {
     $siteCollectionUrl = $item["URL"]
-    $templateName = $item["Template"]
+     $templateName = $item["Select_x0020_Template"]
+   
+    $index = $templateName.IndexOf("#")
+    if ($index -ne -1) {
+        # Remove everything before and including '#'
+        $templateName = $templateName.Substring($index + 1) + ".pnp"
+    } else {
+    }
     $updateTemplate = $item["Update_x0020_Template"]
     $itemId = $item["ID"]
     $commaIndex = $siteCollectionUrl.IndexOf(',')
