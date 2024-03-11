@@ -41,11 +41,11 @@ foreach ($item in $list.Items) {
             Connect-PnPOnline -Url $siteUrl -CurrentCredentials
             Get-PnPFile -Url "$templateLibraryUrl/$templateName" -Path $templateFilePath -AsFile
             Disconnect-PnPOnline
-            $templateFilePath = $templateFilePath + "\$templateName"
+            $templateFilePath2 = $templateFilePath + "\$templateName"
             Connect-PnPOnline -Url $substring -CurrentCredentials
             Get-PnPNavigationNode -Location QuickLaunch | Remove-PnPNavigationNode -Force
-            $null = Apply-PnPProvisioningTemplate -Path $templateFilePath
-            Remove-Item -Path $templateFilePath -Force
+            $null = Apply-PnPProvisioningTemplate -Path $templateFilePath2
+            Remove-Item -Path $templateFilePath2 -Force
             Disconnect-PnPOnline
             Connect-PnPOnline -Url $siteUrl -CurrentCredentials
             $null = Set-PnPListItem -List $listName -Identity $itemId -Values @{"Update_x0020_Template" = "update complete"}

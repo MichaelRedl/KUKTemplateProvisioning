@@ -1,7 +1,7 @@
 $siteUrl = "https://xintranet.kepleruniklinikum.at/abteilungen/KSpace" #KUK
 $listName = "Abteilungen"
 $templateFilePath = $PSScriptRoot
-$sharePointUrl = "https://xintranet.kepleruniklinikum.at/sites/" #KUK
+$sharePointUrl = "https://xintranet.kepleruniklinikum.at/abteilungen/" #KUK
 $templateLibraryUrl = "/abteilungen/KSpace/Templates" #KUK
 
 # Load SharePoint PowerShell snap-in if not already loaded
@@ -30,11 +30,13 @@ foreach ($item in $list.Items) {
 
     $siteExists = Get-SPSite -Identity $newSiteUrl -ErrorAction SilentlyContinue
 
-    if ($null -eq $siteExists -and $newSiteTitle -ne "Template") {
+    if ($null -eq $siteExists -and $newSiteTitle -ne "Template" -and $newSiteTitle -ne "TestJoe1") {
         try {
 
             # Create the new site collection using a default template
-            $newSite = New-SPSite -Url $newSiteUrl -OwnerAlias $newSiteAdmin -Name $newSiteTitle -Template "SITEPAGEPUBLISHING#0" -ErrorAction Stop
+   #        $newSite = New-SPSite -Url $newSiteUrl -OwnerAlias $newSiteAdmin -Name $newSiteTitle -Template "SITEPAGEPUBLISHING#0" -ErrorAction Stop  # Publishing site
+            $newSite = New-SPSite -Url $newSiteUrl -OwnerAlias $newSiteAdmin -SecondaryOwnerAlias "exredlmi" -Name $newSiteTitle -Template "STS#3" -ErrorAction Stop #Team site
+
 
             # Connect to the admin site collection
             Connect-PnPOnline -Url $siteUrl -CurrentCredentials
@@ -47,14 +49,15 @@ foreach ($item in $list.Items) {
 
             # Create Link DML and Link DMS
             $itemId = $item["ID"] | Out-String
-            $linkDmlUrl = "https://dml.kepleruniklinikum.at/sites/" + $newUrlSiteName
-            $linkDmlDesc = "https://dml.kepleruniklinikum.at/sites/"  + $newUrlSiteName
-            $linkDmsUrl = "https://dms.kepleruniklinikum.ad/dms/dokumentationen"  + $newUrlSiteName
-            $linkDmsDesc = "https://dms.kepleruniklinikum.ad/dms/dokumentationen"  + $newUrlSiteName
+#MR Links were added manually to the list        $linkDmlUrl = "https://dml.kepleruniklinikum.at/sites/" + $newUrlSiteName
+#MR             $linkDmlDesc = "https://dml.kepleruniklinikum.at/sites/"  + $newUrlSiteName
+#MR             $linkDmsUrl = "https://dms.kepleruniklinikum.ad/dms/dokumentationen"  + $newUrlSiteName
+#MR             $linkDmsDesc = "https://dms.kepleruniklinikum.ad/dms/dokumentationen"  + $newUrlSiteName
             
             # Update the list item
-            $null = Set-PnPListItem -List $listName -Identity $itemId -Values @{"Link_x0020_DML" = $linkDmlUrl; "Link_x0020_DMS" = $linkDmsUrl; "URL" = $newSiteUrl}
-            Disconnect-PnPOnline
+ #MR             $null = Set-PnPListItem -List $listName -Identity $itemId -Values @{"Link_x0020_DML" = $linkDmlUrl; "Link_x0020_DMS" = $linkDmsUrl; "URL" = $newSiteUrl}
+             $null = Set-PnPListItem -List $listName -Identity $itemId -Values @{"URL" = $newSiteUrl}
+             Disconnect-PnPOnline
 
             # Apply the template
             Connect-PnPOnline -Url $newSiteUrl -CurrentCredentials
